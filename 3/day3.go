@@ -68,6 +68,7 @@ func calcTotalOverlapCount(input []string) (int, int) {
 			for y := claim.position.y; y < claim.position.y+claim.height; y++ {
 				if claimCounts[Vector{x, y}] != 1 {
 					isHero = false
+					break
 				}
 			}
 		}
