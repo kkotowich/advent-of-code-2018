@@ -44,7 +44,7 @@ func main() {
 func calcTotalOverlapCount(input []string) (int, int) {
 	var claim Claim
 	var claims []Claim
-	collisions := make(map[Vector]int)
+	claimCounts := make(map[Vector]int)
 	collisionCount := 0
 	var heroClaimID int
 
@@ -54,8 +54,10 @@ func calcTotalOverlapCount(input []string) (int, int) {
 
 		for x := claim.position.x; x < claim.position.x+claim.width; x++ {
 			for y := claim.position.y; y < claim.position.y+claim.height; y++ {
-				collisions[Vector{x, y}]++
-
+				claimCounts[Vector{x, y}]++
+				if claimCounts[Vector{x, y}] == 2 {
+					collisionCount++
+				}
 			}
 		}
 	}
@@ -64,7 +66,7 @@ func calcTotalOverlapCount(input []string) (int, int) {
 		isHero := true
 		for x := claim.position.x; x < claim.position.x+claim.width; x++ {
 			for y := claim.position.y; y < claim.position.y+claim.height; y++ {
-				if collisions[Vector{x, y}] != 1 {
+				if claimCounts[Vector{x, y}] != 1 {
 					isHero = false
 				}
 			}
@@ -73,12 +75,6 @@ func calcTotalOverlapCount(input []string) (int, int) {
 		if isHero {
 			heroClaimID = claim.id
 			break
-		}
-	}
-
-	for _, value := range collisions {
-		if value > 1 {
-			collisionCount++
 		}
 	}
 
