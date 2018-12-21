@@ -74,13 +74,9 @@ func buildTree(tokens []string, index int) (Node, int) {
 	var tailIndex int
 	var childNodes []Node
 
-	// fmt.Println(index)
-
 	childCount, _ := strconv.Atoi(tokens[index])
 	metadataCount, _ := strconv.Atoi(tokens[index+1])
 	nextIndex := index + 2
-
-	// fmt.Println(childCount)
 
 	for i := 1; i <= childCount; i++ {
 		childNode, tailIndex = buildTree(tokens, nextIndex)
@@ -94,11 +90,7 @@ func buildTree(tokens []string, index int) (Node, int) {
 	for i := 0; i < metadataCount; i++ {
 		value, _ := strconv.Atoi(tokens[nextIndex+i])
 		metadata = append(metadata, value)
-
-		// fmt.Println(value)
 	}
-
-	// fmt.Println(metadataCount)
 
 	nextIndex += metadataCount
 	node := Node{Header{childCount, metadataCount}, childNodes, metadata}
