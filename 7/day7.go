@@ -201,16 +201,25 @@ func createWorkers(workerCount int) []Worker {
 	return workers
 }
 
-func buildStepTree(input []string) map[rune]Step {
-	steps := make(map[rune]Step)
+func indexOfStep(needle Step, haystack []Step) int {
+	for i, step := range haystack {
+		if step.id == needle.id {
+			return i
+		}
+	}
+	return -1
+}
+
+func buildStepTree(input []string) []Step {
+	var steps []Step
 	for _, line := range input {
 		parentStep, childStep := parseLine(line)
 
-		_, ok := steps[parentStep.id]
-		if !ok {
-			steps[parentStep.id] = parentStep
+		parentIndex := indexOfStep(parentStep, steps)
+		if parentIndex == -1 {
+			steps = append(steps, parentStep)
 		} else {
-			existingStep := steps[parentStep.id]
+			existingStep := steps[parentIndex]
 
 			existingNextSteps := existingStep.nextSteps
 			for _, stepID := range parentStep.nextSteps {
@@ -225,9 +234,9 @@ func buildStepTree(input []string) map[rune]Step {
 			steps[parentStep.id] = existingStep
 		}
 
-		_, ok = steps[childStep.id]
-		if !ok {
-			steps[childStep.id] = childStep
+		childIndex := indexOfStep(childStep, steps)
+		if childIndex == -1 {
+			steps = append(steps, childStep)
 		} else {
 			existingStep := steps[childStep.id]
 
@@ -269,7 +278,7 @@ func getStepOrder(input []Step) string {
 	return string(stepString)
 }
 
-func orderSteps(input map[rune]Step) []Step {
+func orderSteps(input []Step) []Step {
 	remainingSteps := input
 	var sortedSteps []Step
 
